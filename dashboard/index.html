@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAE Market Intelligence | Multi-E-Commerce Price Analytics</title>
+    <meta name="description" content="State-of-the-art interactive analytics dashboard comparing 2,000 product prices across Amazon, Flipkart, Croma, Reliance Digital, and Vijay Sales. Featuring Matplotlib research visualizations, real-time price comparator, and automated arbitrage insights.">
+    <meta name="keywords" content="e-commerce analytics, price comparison, python matplotlib, data engineering, web scraping dashboard, product price trends">
+    <meta name="theme-color" content="#07090e">
+
+    <!-- Google Fonts: Outfit (Display) & Inter (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Chart.js 4.x CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Interactive Background Canvas & Ambient Glow Orbs -->
+    <canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+    <div class="ambient-orb orb-primary" aria-hidden="true"></div>
+    <div class="ambient-orb orb-secondary" aria-hidden="true"></div>
+    <div class="ambient-orb orb-tertiary" aria-hidden="true"></div>
+
+    <div class="app-layout" id="appLayout">
+        <!-- Sidebar Navigation & Global Filters -->
+        <aside class="app-sidebar glass-panel" id="appSidebar" aria-label="Main Navigation & Filters">
+            <div class="sidebar-top">
+                <div class="brand-container">
+                    <div class="brand-logo" aria-hidden="true">
+                        <span class="logo-symbol">⚡</span>
+                    </div>
+                    <div class="brand-info">
+                        <h1 class="brand-title">DAE Analytics</h1>
+                        <span class="brand-badge">Market Intelligence</span>
+                    </div>
+                </div>
+                <button class="sidebar-toggle-btn desktop-hide" id="closeSidebarBtn" aria-label="Close navigation sidebar">✕</button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="sidebar-nav">
+                <p class="nav-category-label">NAVIGATION</p>
+                <a href="#heroOverview" class="nav-item active" data-target="heroOverview">
+                    <span class="nav-icon">✨</span>
+                    <span class="nav-text">Executive Hub</span>
+                </a>
+                <a href="#techSection" class="nav-item" data-target="techSection">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Technologies Used</span>
+                    <span class="nav-pill highlight">Stack</span>
+                </a>
+                <a href="#kpiSection" class="nav-item" data-target="kpiSection">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Market Metrics</span>
+                </a>
+                <a href="#insightsSection" class="nav-item" data-target="insightsSection">
+                    <span class="nav-icon">💡</span>
+                    <span class="nav-text">Smart Insights</span>
+                    <span class="nav-pill pulse">Auto</span>
+                </a>
+                <a href="#compareTool" class="nav-item" data-target="compareTool">
+                    <span class="nav-icon">🔍</span>
+                    <span class="nav-text">Price Comparator</span>
+                    <span class="nav-pill highlight">Live</span>
+                </a>
+                <a href="#interactiveAnalytics" class="nav-item" data-target="interactiveAnalytics">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Interactive Charts</span>
+                </a>
+                <a href="#matplotlibGallery" class="nav-item" data-target="matplotlibGallery">
+                    <span class="nav-icon">🔬</span>
+                    <span class="nav-text">Matplotlib Gallery</span>
+                    <span class="nav-count">11</span>
+                </a>
+                <a href="#productsExplorer" class="nav-item" data-target="productsExplorer">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">Product Explorer</span>
+                </a>
+            </nav>
+
+            <!-- Global Dataset Filters -->
+            <div class="sidebar-filters" id="sidebarFilters">
+                <div class="filters-header">
+                    <span class="filters-title">DATA FILTERS</span>
+                    <button id="resetFiltersBtn" class="reset-filter-link" title="Reset all filters">Reset</button>
+                </div>
+
+                <div class="filter-control">
+                    <label for="categoryFilter">Category</label>
+                    <div class="select-wrapper">
+                        <select id="categoryFilter" aria-label="Filter by Category">
+                            <option value="all">All Categories (7)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-control">
+                    <label for="websiteFilter">Retail Website</label>
+                    <div class="select-wrapper">
+                        <select id="websiteFilter" aria-label="Filter by Retail Website">
+                            <option value="all">All Retailers (5)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-control">
+                    <label for="sortFilter">Sort Strategy</label>
+                    <div class="select-wrapper">
+                        <select id="sortFilter" aria-label="Sort products">
+                            <option value="default">Default Scrape Order</option>
+                            <option value="price_asc">Cheapest First (₹ Low → High)</option>
+                            <option value="price_desc">Expensive First (₹ High → Low)</option>
+                            <option value="discount_desc">Highest Discount (%)</option>
+                            <option value="savings_desc">Maximum Cash Savings (₹)</option>
+                            <option value="rating_desc">Highest Rating (★)</option>
+                            <option value="reviews_desc">Most Reviewed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-control">
+                    <div class="range-header">
+                        <label for="priceRangeFilter">Max Price</label>
+                        <span id="priceRangeValue" class="range-display">₹1,30,000</span>
+                    </div>
+                    <input type="range" id="priceRangeFilter" min="1000" max="130000" step="2000" value="130000" class="custom-slider" aria-label="Filter by maximum price">
+                </div>
+            </div>
+
+            <!-- Sidebar Footer Meta -->
+            <div class="sidebar-footer">
+                <div class="meta-row">
+                    <span class="meta-dot"></span>
+                    <span class="meta-status">2,000 Records Analyzed</span>
+                </div>
+                <p class="meta-sub">Python Pandas &bull; Matplotlib &bull; 2026</p>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-workspace" id="mainWorkspace">
+            <!-- Top Sticky Glass Header -->
+            <header class="top-app-bar glass-panel">
+                <div class="top-bar-left">
+                    <button class="menu-toggle-btn" id="openSidebarBtn" aria-label="Toggle navigation menu">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    <div class="global-search-wrapper">
+                        <span class="search-symbol" aria-hidden="true">🔍</span>
+                        <input type="text" id="globalSearchInput" placeholder="Search 20 tech gadgets (e.g. iPhone 15, OLED TV, Sony XM5)..." autocomplete="off" aria-label="Search products">
+                        <span class="search-shortcut" title="Search shortcut">/</span>
+                    </div>
+                </div>
+
+                <div class="top-bar-right">
+                    <div class="stat-pill-group">
+                        <div class="quick-pill" title="Total Scraped Records">
+                            <span class="pill-label">Records</span>
+                            <span class="pill-value" id="topBarRecordCount">2,000</span>
+                        </div>
+                        <div class="quick-pill" title="Active Retail Platforms">
+                            <span class="pill-label">Retailers</span>
+                            <span class="pill-value">5</span>
+                        </div>
+                    </div>
+                    <button id="exportCsvBtn" class="btn-secondary" title="Export current filtered data to CSV">
+                        <span class="btn-icon">📥</span>
+                        <span class="btn-text">Export CSV</span>
+                    </button>
+                    <div class="live-indicator">
+                        <span class="live-pulse-dot"></span>
+                        <span class="live-text">ONLINE</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-scroll-container">
+                <!-- ==================== HERO EXECUTIVE OVERVIEW ==================== -->
+                <section class="hero-section glass-panel" id="heroOverview">
+                    <div class="hero-content">
+                        <div class="hero-badge-container">
+                            <span class="hero-tag">DATA ANALYTICS & ENGINEERING</span>
+                            <span class="hero-date">Dataset Year: 2026</span>
+                        </div>
+                        <h2 class="hero-title">
+                            Multi-Platform E-Commerce <span class="gradient-text">Price Intelligence</span> & Arbitrage Hub
+                        </h2>
+                        <p class="hero-description">
+                            Comprehensive empirical pricing research across <strong>Amazon</strong>, <strong>Flipkart</strong>, <strong>Croma</strong>, <strong>Reliance Digital</strong>, and <strong>Vijay Sales</strong>. Powered by automated web scraping pipelines, rigorous Pandas data hygiene, and high-fidelity visual analytics to reveal cross-platform price spreads and optimal purchasing windows.
+                        </p>
+
+                        <div class="hero-metrics-strip">
+                            <div class="hero-metric-item">
+                                <span class="metric-number">2,000</span>
+                                <span class="metric-caption">Scraped Data Points</span>
+                            </div>
+                            <div class="metric-divider"></div>
+                            <div class="hero-metric-item">
+                                <span class="metric-number">20</span>
+                                <span class="metric-caption">Benchmark Gadgets</span>
+                            </div>
+                            <div class="metric-divider"></div>
+                            <div class="hero-metric-item">
+                                <span class="metric-number">5</span>
+                                <span class="metric-caption">Major Retail Portals</span>
+                            </div>
+                            <div class="metric-divider"></div>
+                            <div class="hero-metric-item">
+                                <span class="metric-number">₹16,080</span>
+                                <span class="metric-caption">Max Price Disparity</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-actions">
+                            <a href="#compareTool" class="btn-primary">
+                                <span class="btn-icon">⚡</span>
+                                <span>Launch Price Comparator</span>
+                            </a>
+                            <a href="#matplotlibGallery" class="btn-glass">
+                                <span class="btn-icon">🔬</span>
+                                <span>Inspect Matplotlib Research (11)</span>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== SECTION 0: TECHNOLOGIES USED & SYSTEM ARCHITECTURE ==================== -->
+                <section class="dashboard-block" id="techSection">
+                    <div class="block-header">
+                        <div>
+                            <div class="gallery-title-wrap">
+                                <h3 class="block-title">Technologies Used & Proposed System Architecture</h3>
+                                <span class="badge-chip python-badge">BATCH-4 DAE REVIEW REQUIREMENTS</span>
+                            </div>
+                            <p class="block-subtitle">End-to-end technical implementation fulfilling academic project requirements across web scraping, data engineering, relational database management, and interactive analytics.</p>
+                        </div>
+                    </div>
+
+                    <!-- Slide 7 Exact Cards Layout -->
+                    <div class="tech-requirements-grid">
+                        <!-- Card 1: Technologies Used -->
+                        <div class="tech-req-card card-tech glass-panel">
+                            <div class="tech-card-banner banner-blue">
+                                <span class="banner-icon">💻</span>
+                                <h4 class="banner-title">Technologies Used</h4>
+                            </div>
+                            <div class="tech-card-inner">
+                                <ul class="tech-bullet-list">
+                                    <li>
+                                        <div class="bullet-indicator blue-dot"></div>
+                                        <div class="bullet-text">
+                                            <strong>Python</strong> — main programming language
+                                            <span class="bullet-meta">Python 3.13 core backend & data pipelines</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="bullet-indicator blue-dot"></div>
+                                        <div class="bullet-text">
+                                            <strong>Requests</strong> — fetch web pages where appropriate
+                                            <span class="bullet-meta">Session management & custom header spoofing in <code>scripts/scraper_requests_bs4.py</code></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="bullet-indicator blue-dot"></div>
+                                        <div class="bullet-text">
+                                            <strong>BeautifulSoup</strong> — parse HTML
+                                            <span class="bullet-meta">CSS selector querying & structured schema extraction</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="bullet-indicator blue-dot"></div>
+                                        <div class="bullet-text">
+                                            <strong>Selenium</strong> — handle dynamically rendered pages
+                                            <span class="bullet-meta">Headless Chrome automation & JS scrolling in <code>scripts/scraper_selenium.py</code></span>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="tech-card-action">
+                                    <span class="terminal-badge">py scripts/scraper_requests_bs4.py</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Analytics Stack -->
+                        <div class="tech-req-card card-analytics glass-panel">
+                            <div class="tech-card-banner banner-orange">
+                                <span class="banner-icon">📊</span>
+                                <h4 class="banner-title">Analytics Stack</h4>
+                            </div>
+                            <div class="tech-card-inner">
+                                <ul class="tech-bullet-list">
+                                    <li>
+                                        <div class="bullet-indicator orange-dot"></div>
+                                        <div class="bullet-text">
+                                            <strong>Pandas</strong> — data cleaning and analysis
+                                            <span class="bullet-meta">Deduplication, type coercion, grouping & arbitrage calculation</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="bullet-indicator orange-dot"></div>
+                                        <div class="bullet-text">
+                                            <strong>NumPy</strong> — numerical operations
+                                            <span class="bullet-meta">Vectorized offsets, price differences & spread metrics</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="bullet-indicator orange-dot"></div>
+                                        <div class="bullet-text">
+                                            <strong>Matplotlib / Seaborn</strong> — visualization
+                                            <span class="bullet-meta">16 high-resolution charts in <code>scripts/generate_seaborn_charts.py</code></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="bullet-indicator orange-dot"></div>
+                                        <div class="bullet-text">
+                                            <strong>CSV / SQLite / MySQL</strong> — storage
+                                            <span class="bullet-meta">Relational database in <code>data/database/products.db</code> & CSV exports</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="bullet-indicator orange-dot"></div>
+                                        <div class="bullet-text">
+                                            <strong>Streamlit</strong> — optional interactive dashboard
+                                            <span class="bullet-meta">Multi-page interactive application in <code>streamlit_app.py</code></span>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="tech-card-action">
+                                    <span class="terminal-badge">py -m streamlit run streamlit_app.py</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Proposed System Architecture Pipeline (Slide 6) -->
+                    <div class="architecture-flow-container glass-panel">
+                        <div class="flow-header">
+                            <h4 class="flow-title">Proposed System Architecture (Pipeline Workflow)</h4>
+                            <span class="flow-subtitle">Raw web information is converted into structured data and then into analytical insights.</span>
+                        </div>
+                        <div class="flow-track">
+                            <div class="flow-node">
+                                <div class="node-badge">Step 1</div>
+                                <div class="node-box">
+                                    <span class="node-icon">🎯</span>
+                                    <span class="node-title">User / Keyword</span>
+                                    <span class="node-desc">Target product query</span>
+                                </div>
+                            </div>
+                            <div class="flow-connector">➔</div>
+                            <div class="flow-node">
+                                <div class="node-badge">Step 2</div>
+                                <div class="node-box">
+                                    <span class="node-icon">🕷️</span>
+                                    <span class="node-title">Web Scraping</span>
+                                    <span class="node-desc">Requests & Selenium</span>
+                                </div>
+                            </div>
+                            <div class="flow-connector">➔</div>
+                            <div class="flow-node">
+                                <div class="node-badge">Step 3</div>
+                                <div class="node-box">
+                                    <span class="node-icon">📦</span>
+                                    <span class="node-title">Raw Dataset</span>
+                                    <span class="node-desc">2,000 observations</span>
+                                </div>
+                            </div>
+                            <div class="flow-connector">➔</div>
+                            <div class="flow-node">
+                                <div class="node-badge">Step 4</div>
+                                <div class="node-box">
+                                    <span class="node-icon">🧹</span>
+                                    <span class="node-title">Cleaning & Preproc</span>
+                                    <span class="node-desc">Pandas & NumPy</span>
+                                </div>
+                            </div>
+                            <div class="flow-connector">➔</div>
+                            <div class="flow-node">
+                                <div class="node-badge">Step 5</div>
+                                <div class="node-box">
+                                    <span class="node-icon">🗄️</span>
+                                    <span class="node-title">Relational Store</span>
+                                    <span class="node-desc">SQLite Database</span>
+                                </div>
+                            </div>
+                            <div class="flow-connector">➔</div>
+                            <div class="flow-node">
+                                <div class="node-badge">Step 6</div>
+                                <div class="node-box">
+                                    <span class="node-icon">💰</span>
+                                    <span class="node-title">Price Analysis</span>
+                                    <span class="node-desc">Min / Max / Avg spread</span>
+                                </div>
+                            </div>
+                            <div class="flow-connector">➔</div>
+                            <div class="flow-node">
+                                <div class="node-badge">Step 7</div>
+                                <div class="node-box">
+                                    <span class="node-icon">📊</span>
+                                    <span class="node-title">Visuals & Insights</span>
+                                    <span class="node-desc">Matplotlib & Streamlit</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== SECTION 1: KEY MARKET METRICS ==================== -->
+                <section class="dashboard-block" id="kpiSection">
+                    <div class="block-header">
+                        <div>
+                            <h3 class="block-title">Real-Time Market Key Performance Indicators</h3>
+                            <p class="block-subtitle">Dynamic aggregates updating synchronously with your active category, retailer, and search criteria.</p>
+                        </div>
+                    </div>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card glass-panel tilt-card" data-accent="indigo">
+                            <div class="kpi-card-glow"></div>
+                            <div class="kpi-header">
+                                <span class="kpi-tag">DATASET VOLUME</span>
+                                <div class="kpi-icon-wrap icon-indigo">📦</div>
+                            </div>
+                            <div class="kpi-main">
+                                <h4 class="kpi-number" id="kpiTotalRecords">--</h4>
+                                <span class="kpi-trend neutral">Cleaned Observations</span>
+                            </div>
+                            <div class="kpi-footer-meta">100% deduplicated & validated</div>
+                        </div>
+
+                        <div class="kpi-card glass-panel tilt-card" data-accent="emerald">
+                            <div class="kpi-card-glow"></div>
+                            <div class="kpi-header">
+                                <span class="kpi-tag">BEST MARKET PRICE</span>
+                                <div class="kpi-icon-wrap icon-emerald">💰</div>
+                            </div>
+                            <div class="kpi-main">
+                                <h4 class="kpi-number color-emerald" id="kpiMinPrice">--</h4>
+                                <span class="kpi-trend positive" id="kpiMinPriceProduct">Cheapest in Selection</span>
+                            </div>
+                            <div class="kpi-footer-meta" id="kpiMinPriceSub">Lowest observed purchase value</div>
+                        </div>
+
+                        <div class="kpi-card glass-panel tilt-card" data-accent="rose">
+                            <div class="kpi-card-glow"></div>
+                            <div class="kpi-header">
+                                <span class="kpi-tag">PEAK MARKET PRICE</span>
+                                <div class="kpi-icon-wrap icon-rose">🏷️</div>
+                            </div>
+                            <div class="kpi-main">
+                                <h4 class="kpi-number color-rose" id="kpiMaxPrice">--</h4>
+                                <span class="kpi-trend negative">Highest Price Point</span>
+                            </div>
+                            <div class="kpi-footer-meta" id="kpiMaxPriceSub">Premium tier catalogue ceiling</div>
+                        </div>
+
+                        <div class="kpi-card glass-panel tilt-card" data-accent="cyan">
+                            <div class="kpi-card-glow"></div>
+                            <div class="kpi-header">
+                                <span class="kpi-tag">AVERAGE SELLING PRICE</span>
+                                <div class="kpi-icon-wrap icon-cyan">⚖️</div>
+                            </div>
+                            <div class="kpi-main">
+                                <h4 class="kpi-number" id="kpiAvgPrice">--</h4>
+                                <span class="kpi-trend neutral">Mean Catalog Value</span>
+                            </div>
+                            <div class="kpi-footer-meta">Weighted across all retailers</div>
+                        </div>
+
+                        <div class="kpi-card glass-panel tilt-card" data-accent="amber">
+                            <div class="kpi-card-glow"></div>
+                            <div class="kpi-header">
+                                <span class="kpi-tag">CUSTOMER SATISFACTION</span>
+                                <div class="kpi-icon-wrap icon-amber">⭐</div>
+                            </div>
+                            <div class="kpi-main">
+                                <h4 class="kpi-number color-amber" id="kpiAvgRating">--</h4>
+                                <span class="kpi-trend positive">Out of 5.0 Stars</span>
+                            </div>
+                            <div class="kpi-footer-meta" id="kpiTotalReviews">Aggregated verified reviews</div>
+                        </div>
+
+                        <div class="kpi-card glass-panel tilt-card" data-accent="fuchsia">
+                            <div class="kpi-card-glow"></div>
+                            <div class="kpi-header">
+                                <span class="kpi-tag">AVERAGE DISCOUNT</span>
+                                <div class="kpi-icon-wrap icon-fuchsia">🎁</div>
+                            </div>
+                            <div class="kpi-main">
+                                <h4 class="kpi-number color-fuchsia" id="kpiAvgDiscount">--</h4>
+                                <span class="kpi-trend positive">Off Retail MRP</span>
+                            </div>
+                            <div class="kpi-footer-meta" id="kpiAvgSavings">Average cash discount per item</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== SECTION 2: SMART DATA INSIGHTS ==================== -->
+                <section class="dashboard-block" id="insightsSection">
+                    <div class="block-header">
+                        <div>
+                            <h3 class="block-title">Automated Market Intelligence & Findings</h3>
+                            <p class="block-subtitle">Synthesized findings extracted algorithmically from 2,000 multi-retailer price logs.</p>
+                        </div>
+                        <span class="badge-chip">PANDAS ANALYTICS ENGINE</span>
+                    </div>
+
+                    <div class="insights-card-grid">
+                        <!-- Insight 1: Arbitrage Opportunity -->
+                        <div class="insight-card glass-panel highlight-border">
+                            <div class="insight-badge badge-warning">⚡ MASSIVE ARBITRAGE</div>
+                            <h4 class="insight-heading" id="insightArbitrageTitle">LG 55" OLED TV Price Swing</h4>
+                            <p class="insight-body" id="insightArbitrageDesc">
+                                The same <strong>LG 55-inch OLED TV</strong> fluctuates from <strong>₹1,08,000</strong> on the cheapest website to <strong>₹1,24,080</strong> on the most expensive. That's a <strong>₹16,080 price difference (14.9%)</strong> for the exact identical unit!
+                            </p>
+                            <div class="insight-footer-tag">Recommended: Always cross-reference before checkout</div>
+                        </div>
+
+                        <!-- Insight 2: Best Retailer for Discounts -->
+                        <div class="insight-card glass-panel">
+                            <div class="insight-badge badge-success">🏆 DISCOUNT CHAMPION</div>
+                            <h4 class="insight-heading" id="insightBestRetailerTitle">Flipkart Leads in Discounts</h4>
+                            <p class="insight-body" id="insightBestRetailerDesc">
+                                With an average discount of <strong>14.07%</strong> and average selling price of <strong>₹46,175</strong>, Flipkart consistently undercuts Croma (12.18%) and Vijay Sales (12.16%) across comparable categories.
+                            </p>
+                            <div class="insight-footer-tag">Average savings: ₹6,432 per transaction</div>
+                        </div>
+
+                        <!-- Insight 3: Highest Value Tech Category -->
+                        <div class="insight-card glass-panel">
+                            <div class="insight-badge badge-info">📈 CATEGORY ECONOMICS</div>
+                            <h4 class="insight-heading">Televisions Deliver Highest Savings</h4>
+                            <p class="insight-body">
+                                While Smart TVs hold the highest ticket prices (Average ₹75,260), they also provide the absolute largest monetary savings (Up to <strong>₹18,489</strong> below MRP per unit). Conversely, mice and earbuds offer micro-discounts under ₹1,500.
+                            </p>
+                            <div class="insight-footer-tag">Top dollar savings in electronics</div>
+                        </div>
+
+                        <!-- Insight 4: Best Deal Overall -->
+                        <div class="insight-card glass-panel">
+                            <div class="insight-badge badge-accent">🎯 TOP VALUE PRODUCT</div>
+                            <h4 class="insight-heading" id="insightTopDealTitle">boAt Rockerz 550 & Wireless Mouse</h4>
+                            <p class="insight-body" id="insightTopDealDesc">
+                                Entry-tier electronics like the <strong>HP Wireless Mouse 250</strong> (as low as <strong>₹1,180</strong>) and <strong>boAt Rockerz 550</strong> (<strong>₹1,820</strong>) enjoy 4.45+ customer ratings despite ultra-accessible pricing.
+                            </p>
+                            <div class="insight-footer-tag">Highest rating-to-price quotient</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== SECTION 3: INTERACTIVE PRICE COMPARATOR ==================== -->
+                <section class="dashboard-block" id="compareTool">
+                    <div class="block-header">
+                        <div>
+                            <h3 class="block-title">Interactive Product Price Comparator</h3>
+                            <p class="block-subtitle">Select any gadget to compare cross-retailer pricing, reveal the cheapest store, and visualize price gaps.</p>
+                        </div>
+                    </div>
+
+                    <div class="comparator-wrapper glass-panel">
+                        <div class="comparator-controls-bar">
+                            <div class="comparator-select-group">
+                                <label for="compareProductSelect" class="control-label">Select Product to Inspect:</label>
+                                <div class="select-wrapper large-select">
+                                    <select id="compareProductSelect" aria-label="Select product for price comparison">
+                                        <!-- Dynamically Populated -->
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="quick-chips-wrap">
+                                <span class="chips-label">Quick Picks:</span>
+                                <div class="chips-list" id="popularChipsContainer">
+                                    <button class="chip-btn active" data-product="Apple iPhone 15">iPhone 15</button>
+                                    <button class="chip-btn" data-product="LG 55-inch OLED TV">LG OLED 55"</button>
+                                    <button class="chip-btn" data-product="Sony WH-1000XM5">Sony XM5</button>
+                                    <button class="chip-btn" data-product="Canon EOS 1500D">Canon 1500D</button>
+                                    <button class="chip-btn" data-product="ASUS Vivobook 15">ASUS Vivobook</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Result Card -->
+                        <div class="comparator-result-area" id="comparatorResultArea">
+                            <!-- Populated via JavaScript -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== SECTION 4: CHART.JS INTERACTIVE ANALYTICS ==================== -->
+                <section class="dashboard-block" id="interactiveAnalytics">
+                    <div class="block-header">
+                        <div>
+                            <h3 class="block-title">Interactive Chart.js Visualizations</h3>
+                            <p class="block-subtitle">Dynamic, responsive client-rendered visual analytics with interactive tooltips and category drilldowns.</p>
+                        </div>
+                    </div>
+
+                    <div class="charts-interactive-grid">
+                        <!-- Chart 1: Time-series Trend -->
+                        <div class="chart-box glass-panel full-width-chart">
+                            <div class="chart-box-header">
+                                <div>
+                                    <h4 class="chart-box-title">Multi-Product Longitudinal Price Trajectory (Weekly Scrapes)</h4>
+                                    <p class="chart-box-subtitle">Tracks average selling prices over time across benchmark products to demonstrate retail price volatility.</p>
+                                </div>
+                                <div class="chart-legend-indicator" id="trendChartPills"></div>
+                            </div>
+                            <div class="canvas-holder large-canvas">
+                                <canvas id="dynamicTrendChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Chart 2: Category Average Selling Price -->
+                        <div class="chart-box glass-panel">
+                            <div class="chart-box-header">
+                                <div>
+                                    <h4 class="chart-box-title">Average Selling Price by Category</h4>
+                                    <p class="chart-box-subtitle">Horizontal price index across the 7 product sectors.</p>
+                                </div>
+                            </div>
+                            <div class="canvas-holder">
+                                <canvas id="dynamicCategoryChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Chart 3: Retailer Price Performance -->
+                        <div class="chart-box glass-panel">
+                            <div class="chart-box-header">
+                                <div>
+                                    <h4 class="chart-box-title">Retailer Competitiveness Matrix</h4>
+                                    <p class="chart-box-subtitle">Best, Average, and Worst prices across all 5 e-commerce stores.</p>
+                                </div>
+                            </div>
+                            <div class="canvas-holder">
+                                <canvas id="dynamicWebsiteChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== SECTION 5: MATPLOTLIB RESEARCH GALLERY ==================== -->
+                <section class="dashboard-block" id="matplotlibGallery">
+                    <div class="block-header">
+                        <div>
+                            <div class="gallery-title-wrap">
+                                <h3 class="block-title">Python Matplotlib & Seaborn Research Visualizations</h3>
+                                <span class="badge-chip python-badge">MATPLOTLIB & SEABORN</span>
+                            </div>
+                            <p class="block-subtitle">16 publication-grade statistical and scientific charts generated by the data engineering pipelines (<code>scripts/preprocess_dataset.py</code> & <code>scripts/generate_seaborn_charts.py</code>). Click any card to inspect in full-screen Lightbox.</p>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Filter Tabs -->
+                    <div class="gallery-tabs">
+                        <button class="gallery-tab-btn active" data-filter="all">All Visualizations (16)</button>
+                        <button class="gallery-tab-btn" data-filter="seaborn">Seaborn Statistical (5)</button>
+                        <button class="gallery-tab-btn" data-filter="price">Price & Arbitrage</button>
+                        <button class="gallery-tab-btn" data-filter="retailer">Retailer Comparison</button>
+                        <button class="gallery-tab-btn" data-filter="trends">Trends & Heatmaps</button>
+                        <button class="gallery-tab-btn" data-filter="breakdown">Distributions</button>
+                    </div>
+
+                    <div class="matplotlib-gallery-grid" id="matplotlibGalleryGrid">
+                        <!-- Seaborn 1: Box Plot -->
+                        <div class="gallery-card glass-panel" data-category="seaborn breakdown" data-img="charts/price_distribution_boxplot.png" data-title="Category Price Distribution & Outliers (Seaborn Boxplot)" data-desc="Seaborn boxplot displaying median prices, interquartile ranges (IQR), and upper/lower price outliers across the 7 consumer electronics categories.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/price_distribution_boxplot.png" alt="Category Price Distribution Box Plot" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag tag-seaborn">SEABORN &bull; BOXPLOT</div>
+                                <h5 class="gallery-card-title">Category Price Spread & Outliers</h5>
+                                <p class="gallery-card-caption">IQR spread showcasing extreme variance in TV and Camera sectors.</p>
+                            </div>
+                        </div>
+
+                        <!-- Seaborn 2: Rating vs Price -->
+                        <div class="gallery-card glass-panel" data-category="seaborn price" data-img="charts/rating_vs_price_scatter.png" data-title="Product Price vs Customer Rating (Seaborn Regplot)" data-desc="Linear regression scatter plot demonstrating customer satisfaction consistency across budget vs luxury gadgets.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/rating_vs_price_scatter.png" alt="Rating vs Price Regression Scatter" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag tag-seaborn">SEABORN &bull; REGRESSION</div>
+                                <h5 class="gallery-card-title">Price vs Customer Rating Correlation</h5>
+                                <p class="gallery-card-caption">Scatter points with linear fit indicating high ratings across tiers.</p>
+                            </div>
+                        </div>
+
+                        <!-- Seaborn 3: Category Violin Plot -->
+                        <div class="gallery-card glass-panel" data-category="seaborn breakdown" data-img="charts/category_violin_plot.png" data-title="Category Price Density Distribution (Seaborn Violin Plot)" data-desc="Bimodal and multi-modal probability density shapes revealing exact price clustering and variance per product group.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/category_violin_plot.png" alt="Category Price Density Violin Plot" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag tag-seaborn">SEABORN &bull; VIOLIN PLOT</div>
+                                <h5 class="gallery-card-title">Category Price Density & Multimodality</h5>
+                                <p class="gallery-card-caption">Reveals distinct premium vs mainstream product clustering.</p>
+                            </div>
+                        </div>
+
+                        <!-- Seaborn 4: Discount KDE -->
+                        <div class="gallery-card glass-panel" data-category="seaborn retailer" data-img="charts/platform_discount_kde.png" data-title="Retailer Discount Kernel Density Estimation (Seaborn KDE)" data-desc="Kernel density curves comparing promotional discounting intensity between Amazon, Flipkart, Croma, Reliance Digital, and Vijay Sales.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/platform_discount_kde.png" alt="Platform Discount KDE Distribution" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag tag-seaborn">SEABORN &bull; KDE DENSITY</div>
+                                <h5 class="gallery-card-title">Retailer Discount Density Curves</h5>
+                                <p class="gallery-card-caption">Empirical probability curves highlighting Flipkart & Amazon aggression.</p>
+                            </div>
+                        </div>
+
+                        <!-- Seaborn 5: Platform Price Heatmap -->
+                        <div class="gallery-card glass-panel" data-category="seaborn trends" data-img="charts/platform_price_heatmap.png" data-title="Category × Retailer Average Price Heatmap (Seaborn Heatmap)" data-desc="Seaborn annotated matrix heatmap showcasing the exact mean selling price across each category and store with Mako palette.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/platform_price_heatmap.png" alt="Category vs Retailer Price Heatmap" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag tag-seaborn">SEABORN &bull; HEATMAP</div>
+                                <h5 class="gallery-card-title">Category × Retailer Matrix Heatmap</h5>
+                                <p class="gallery-card-caption">Detailed cell annotations mapped across all 7 categories.</p>
+                            </div>
+                        </div>
+                        <!-- Card 1: Product Price Range -->
+                        <div class="gallery-card glass-panel" data-category="price" data-img="charts/product_price_range.png" data-title="Product Price Range Across All Websites" data-desc="Dumbbell visualization revealing the minimum (Best ●), maximum (Worst ●), and average (◆) selling prices for all 20 products, highlighting massive spreads in premium items.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/product_price_range.png" alt="Product Price Range Across All Websites" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag">DUMBBELL SPREAD</div>
+                                <h5 class="gallery-card-title">Product Price Range (Best vs Worst vs Avg)</h5>
+                                <p class="gallery-card-caption">Exposes price variation of up to ₹16,080 across identical SKUs.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Website Comparison -->
+                        <div class="gallery-card glass-panel" data-category="retailer" data-img="charts/website_comparison.png" data-title="Which Website Offers the Best Price? (Top 6 Products)" data-desc="Grouped multi-bar chart comparing the 5 retail platforms across the 6 highest value products (LG OLED TV, Nikon D7500, iPhone 15, S24, OnePlus 12, Lenovo IdeaPad).">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/website_comparison.png" alt="Website Price Comparison" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag">MULTI-BAR COMPARISON</div>
+                                <h5 class="gallery-card-title">Which Retailer Offers the Best Deal?</h5>
+                                <p class="gallery-card-caption">Side-by-side pricing for top 6 high-value consumer electronics.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Price Trends Multi -->
+                        <div class="gallery-card glass-panel" data-category="trends" data-img="charts/price_trends_multi.png" data-title="Price Trend Comparison: 4 Products Over Time" data-desc="Longitudinal time-series analysis over weekly scrape intervals for 4 benchmark products: iPhone 15, LG OLED TV, Sony XM5, and HP Mouse.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/price_trends_multi.png" alt="Multi-Product Price Trends" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag">LONGITUDINAL TIME SERIES</div>
+                                <h5 class="gallery-card-title">Price Trends Over Weekly Scrapes</h5>
+                                <p class="gallery-card-caption">Highlights cyclical price fluctuations and promotional shifts.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Price Heatmap -->
+                        <div class="gallery-card glass-panel" data-category="trends" data-img="charts/price_heatmap.png" data-title="Price Heatmap: Every Product × Every Website" data-desc="Matrix heatmap displaying the exact numerical average selling price across every single permutation of the 20 products and 5 websites, color-coded from green (low) to red (high).">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/price_heatmap.png" alt="Price Heatmap" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag">2D MATRIX HEATMAP</div>
+                                <h5 class="gallery-card-title">Full Product × Retailer Price Heatmap</h5>
+                                <p class="gallery-card-caption">100 discrete price points mapped with RdYlGn colormap.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Category Avg Price -->
+                        <div class="gallery-card glass-panel" data-category="breakdown" data-img="charts/category_avg_price.png" data-title="Average Selling Price by Category (Donut)" data-desc="Donut chart illustrating proportional expenditure across Television, Camera, Smartphone, Laptop, Earbuds, Headphones, and Mouse sectors.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/category_avg_price.png" alt="Category Avg Price" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag">DONUT BREAKDOWN</div>
+                                <h5 class="gallery-card-title">Category Average Price Distribution</h5>
+                                <p class="gallery-card-caption">Displays relative price weight from TV down to PC Mouse.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 6: Savings per Product -->
+                        <div class="gallery-card glass-panel" data-category="price" data-img="charts/savings_per_product.png" data-title="Average Savings Per Product (MRP vs Actual)" data-desc="Horizontal bar chart showing the absolute rupee savings (MRP minus Actual Selling Price) across all 20 products, led by LG OLED TV with ₹18,489 in savings.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/savings_per_product.png" alt="Savings Per Product" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag">SAVINGS SPECTRUM</div>
+                                <h5 class="gallery-card-title">Average Savings per Product (₹ MRP Discount)</h5>
+                                <p class="gallery-card-caption">Quantifies actual pocket savings against manufacturer MRP.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 7: Category Discount -->
+                        <div class="gallery-card glass-panel" data-category="breakdown" data-img="charts/category_discount.png" data-title="Category Discount Analysis" data-desc="Evaluates average promotional percentage discounts across product categories.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/category_discount.png" alt="Category Discount Distribution" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag">DISCOUNT RATIOS</div>
+                                <h5 class="gallery-card-title">Discount Percentage by Category</h5>
+                                <p class="gallery-card-caption">Shows average percentage discount across product families.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 8: Top Rated Products -->
+                        <div class="gallery-card glass-panel" data-category="breakdown" data-img="charts/top_rated_products.png" data-title="Top Rated Products" data-desc="Rankings based on consumer review scores and volume metrics across online retail.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/top_rated_products.png" alt="Top Rated Products" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag">SATISFACTION INDEX</div>
+                                <h5 class="gallery-card-title">Top Rated Consumer Products</h5>
+                                <p class="gallery-card-caption">Correlation between price, brand reputation, and user reviews.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 9: Best Price Products -->
+                        <div class="gallery-card glass-panel" data-category="price" data-img="charts/best_price_products.png" data-title="Best Price Distribution Across Products" data-desc="Highlights the ultra-budget champion items with lowest entry barriers.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/best_price_products.png" alt="Best Price Products" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag">BUDGET LEADERS</div>
+                                <h5 class="gallery-card-title">Best Price Products Ranking</h5>
+                                <p class="gallery-card-caption">Pinpoints the most affordable items in the dataset.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 10: Rating Distribution -->
+                        <div class="gallery-card glass-panel" data-category="breakdown" data-img="charts/rating_distribution.png" data-title="Customer Rating Distribution" data-desc="Statistical distribution and density of consumer star ratings across the dataset.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/rating_distribution.png" alt="Customer Rating Distribution" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag">DENSITY & DISTRIBUTION</div>
+                                <h5 class="gallery-card-title">Customer Rating Distribution</h5>
+                                <p class="gallery-card-caption">Shows density around 4.45 stars across major electronics.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 11: Price Trend Single Overview -->
+                        <div class="gallery-card glass-panel" data-category="trends" data-img="charts/price_trend.png" data-title="Price Trend Macro Overview" data-desc="Aggregated price movement curve over all weekly scraping cycles.">
+                            <div class="gallery-img-wrapper">
+                                <img src="charts/price_trend.png" alt="Price Trend Overview" loading="lazy">
+                                <div class="gallery-overlay">
+                                    <span class="zoom-icon">🔍</span>
+                                    <span class="zoom-label">Click to Inspect</span>
+                                </div>
+                            </div>
+                            <div class="gallery-card-info">
+                                <div class="card-tag">MACRO TREND</div>
+                                <h5 class="gallery-card-title">Macro Dataset Price Trend</h5>
+                                <p class="gallery-card-caption">Aggregate trend line across the entire scraping period.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== SECTION 6: PRODUCT FINDER DATA TABLE ==================== -->
+                <section class="dashboard-block" id="productsExplorer">
+                    <div class="block-header">
+                        <div>
+                            <h3 class="block-title">Interactive Product Explorer & Data Table</h3>
+                            <p class="block-subtitle">Search, filter, paginate, and sort across all 2,000 granular scrape observations.</p>
+                        </div>
+                        <div class="table-actions-strip">
+                            <div class="rows-per-page-select">
+                                <label for="rowsPerPageSelect">Show</label>
+                                <select id="rowsPerPageSelect" aria-label="Rows per page">
+                                    <option value="15">15 rows</option>
+                                    <option value="25" selected>25 rows</option>
+                                    <option value="50">50 rows</option>
+                                    <option value="100">100 rows</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-card glass-panel">
+                        <div class="table-responsive">
+                            <table id="productsDataTable" class="custom-data-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-rank">#</th>
+                                        <th class="col-name sortable" data-sort="name">Product Name <span class="sort-icon">⇅</span></th>
+                                        <th class="col-cat sortable" data-sort="category">Category <span class="sort-icon">⇅</span></th>
+                                        <th class="col-site sortable" data-sort="website">Retailer <span class="sort-icon">⇅</span></th>
+                                        <th class="col-date sortable" data-sort="date">Scrape Date <span class="sort-icon">⇅</span></th>
+                                        <th class="col-mrp sortable" data-sort="mrp">MRP (₹) <span class="sort-icon">⇅</span></th>
+                                        <th class="col-price sortable" data-sort="price">Selling Price <span class="sort-icon">⇅</span></th>
+                                        <th class="col-discount sortable" data-sort="discount">Discount <span class="sort-icon">⇅</span></th>
+                                        <th class="col-rating sortable" data-sort="rating">Rating <span class="sort-icon">⇅</span></th>
+                                        <th class="col-action">Compare</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Table Pagination Bar -->
+                        <div class="table-pagination-bar">
+                            <div class="pagination-info" id="paginationInfo">
+                                Showing 1 to 25 of 2,000 entries
+                            </div>
+                            <div class="pagination-controls" id="paginationControls">
+                                <!-- Dynamic pagination buttons -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== PREMIUM FOOTER ==================== -->
+                <footer class="app-footer glass-panel">
+                    <div class="footer-top">
+                        <div class="footer-brand">
+                            <div class="brand-logo small-logo">⚡</div>
+                            <div>
+                                <h4 class="footer-heading">DAE Market Intelligence Hub</h4>
+                                <p class="footer-desc">A comprehensive Data Analytics & Engineering research project investigating multi-platform retail pricing disparities, discount patterns, and data engineering pipelines.</p>
+                            </div>
+                        </div>
+                        <div class="footer-tech-stack">
+                            <span class="tech-badge">Python 3.11</span>
+                            <span class="tech-badge">Pandas 2.x</span>
+                            <span class="tech-badge">Matplotlib</span>
+                            <span class="tech-badge">OpenPyXL</span>
+                            <span class="tech-badge">Chart.js 4</span>
+                            <span class="tech-badge">HTML5 / Modern CSS</span>
+                        </div>
+                    </div>
+
+                    <div class="footer-bottom">
+                        <p class="footer-copy">&copy; 2026 DAE Analytics Team. Built for rigorous Academic & Engineering Evaluation.</p>
+                        <div class="footer-links">
+                            <a href="#heroOverview">Back to Top ↑</a>
+                            <a href="#compareTool">Price Comparator</a>
+                            <a href="#matplotlibGallery">Matplotlib Gallery</a>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <!-- ==================== FULLSCREEN LIGHTBOX MODAL ==================== -->
+    <div class="lightbox-modal" id="lightboxModal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+        <div class="lightbox-dialog glass-panel">
+            <div class="lightbox-header">
+                <div>
+                    <h4 class="lightbox-title" id="lightboxTitle">Visualization Preview</h4>
+                    <p class="lightbox-desc" id="lightboxDesc">Chart description</p>
+                </div>
+                <button class="lightbox-close-btn" id="lightboxCloseBtn" aria-label="Close image preview">✕</button>
+            </div>
+            <div class="lightbox-body">
+                <img id="lightboxImage" src="" alt="Matplotlib High Resolution Chart" class="lightbox-img">
+            </div>
+            <div class="lightbox-footer">
+                <span class="lightbox-meta">Generated via <code>scripts/preprocess_dataset.py</code> with Matplotlib</span>
+                <button class="btn-secondary small-btn" id="lightboxDownloadBtn">Download High-Res</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Banner -->
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+    <!-- Application Script -->
+    <script src="dashboard.js"></script>
+</body>
+</html>

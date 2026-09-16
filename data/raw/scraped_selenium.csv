@@ -1,0 +1,5 @@
+Product Name,Website,Selling Price (₹),MRP (₹),Discount (%),Rating,Review Count,Scrape Date,Scraped Via
+Sony Bravia 55-inch 4K TV,Reliance Digital,64990.0,78390.0,17.1,4.6,1420,2026-09-16,Selenium Headless Automation
+LG 55-inch OLED TV,Croma,112990.0,134390.0,15.9,4.8,890,2026-09-16,Selenium Headless Automation
+OnePlus 12 (256GB) Flowy Emerald,Vijay Sales,62999.0,72800.0,13.5,4.5,2340,2026-09-16,Selenium Headless Automation
+Dell Inspiron 15 (Core i5 16GB),Flipkart,55990.0,66070.0,15.3,4.4,1670,2026-09-16,Selenium Headless Automation

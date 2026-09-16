@@ -1,0 +1,42 @@
+[
+    {
+        "Product Name":"Apple iPhone 15 (128GB) - Black",
+        "Website":"Amazon",
+        "Selling Price (\u20b9)":65999.0,
+        "MRP (\u20b9)":79900.0,
+        "Discount (%)":17.4,
+        "Rating":4.6,
+        "Review Count":3420,
+        "Scrape Date":"2026-09-16"
+    },
+    {
+        "Product Name":"Samsung Galaxy S24 Ultra (256GB)",
+        "Website":"Amazon",
+        "Selling Price (\u20b9)":119999.0,
+        "MRP (\u20b9)":134999.0,
+        "Discount (%)":11.1,
+        "Rating":4.7,
+        "Review Count":1850,
+        "Scrape Date":"2026-09-16"
+    },
+    {
+        "Product Name":"Sony WH-1000XM5 Wireless Headphones",
+        "Website":"Amazon",
+        "Selling Price (\u20b9)":28990.0,
+        "MRP (\u20b9)":34990.0,
+        "Discount (%)":17.1,
+        "Rating":4.5,
+        "Review Count":940,
+        "Scrape Date":"2026-09-16"
+    },
+    {
+        "Product Name":"HP Wireless Mouse 250",
+        "Website":"Amazon",
+        "Selling Price (\u20b9)":1180.0,
+        "MRP (\u20b9)":1499.0,
+        "Discount (%)":21.3,
+        "Rating":4.3,
+        "Review Count":2110,
+        "Scrape Date":"2026-09-16"
+    }
+]

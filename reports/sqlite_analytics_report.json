@@ -1,0 +1,137 @@
+{
+    "platform_competitiveness": [
+        {
+            "Website": "Flipkart",
+            "TotalListings": 400,
+            "AvgSellingPrice": 46175.3,
+            "AvgDiscountPercent": 14.07,
+            "AvgRating": 4.45
+        },
+        {
+            "Website": "Amazon",
+            "TotalListings": 400,
+            "AvgSellingPrice": 46344.15,
+            "AvgDiscountPercent": 13.76,
+            "AvgRating": 4.45
+        },
+        {
+            "Website": "Reliance Digital",
+            "TotalListings": 400,
+            "AvgSellingPrice": 46556.28,
+            "AvgDiscountPercent": 13.36,
+            "AvgRating": 4.45
+        },
+        {
+            "Website": "Croma",
+            "TotalListings": 400,
+            "AvgSellingPrice": 47191.22,
+            "AvgDiscountPercent": 12.18,
+            "AvgRating": 4.45
+        },
+        {
+            "Website": "Vijay Sales",
+            "TotalListings": 400,
+            "AvgSellingPrice": 47198.07,
+            "AvgDiscountPercent": 12.17,
+            "AvgRating": 4.45
+        }
+    ],
+    "top_arbitrage_products": [
+        {
+            "Product": "LG 55-inch OLED TV",
+            "Category": "Television",
+            "MRP": 134390.0,
+            "LowestPrice": 108000.0,
+            "HighestPrice": 124080.0,
+            "PriceDifference": 16080.0,
+            "ArbitragePercent": 14.89
+        },
+        {
+            "Product": "Sony Bravia 55-inch 4K TV",
+            "Category": "Television",
+            "MRP": 78390.0,
+            "LowestPrice": 63640.0,
+            "HighestPrice": 72380.0,
+            "PriceDifference": 8740.0,
+            "ArbitragePercent": 13.73
+        },
+        {
+            "Product": "Samsung Galaxy S24",
+            "Category": "Smartphone",
+            "MRP": 84000.0,
+            "LowestPrice": 68880.0,
+            "HighestPrice": 77560.0,
+            "PriceDifference": 8680.0,
+            "ArbitragePercent": 12.6
+        },
+        {
+            "Product": "Lenovo IdeaPad Slim 5",
+            "Category": "Laptop",
+            "MRP": 73910.0,
+            "LowestPrice": 60000.0,
+            "HighestPrice": 68240.0,
+            "PriceDifference": 8240.0,
+            "ArbitragePercent": 13.73
+        },
+        {
+            "Product": "OnePlus 12",
+            "Category": "Smartphone",
+            "MRP": 72800.0,
+            "LowestPrice": 59100.0,
+            "HighestPrice": 67220.0,
+            "PriceDifference": 8120.0,
+            "ArbitragePercent": 13.74
+        },
+        {
+            "Product": "Nikon D7500",
+            "Category": "Camera",
+            "MRP": 84000.0,
+            "LowestPrice": 69560.0,
+            "HighestPrice": 77560.0,
+            "PriceDifference": 8000.0,
+            "ArbitragePercent": 11.5
+        },
+        {
+            "Product": "Google Pixel 8",
+            "Category": "Smartphone",
+            "MRP": 66080.0,
+            "LowestPrice": 53100.0,
+            "HighestPrice": 61010.0,
+            "PriceDifference": 7910.0,
+            "ArbitragePercent": 14.9
+        },
+        {
+            "Product": "Apple iPhone 15",
+            "Category": "Smartphone",
+            "MRP": 78400.0,
+            "LowestPrice": 64930.0,
+            "HighestPrice": 72390.0,
+            "PriceDifference": 7460.0,
+            "ArbitragePercent": 11.49
+        },
+        {
+            "Product": "ASUS Vivobook 15",
+            "Category": "Laptop",
+            "MRP": 61590.0,
+            "LowestPrice": 49490.0,
+            "HighestPrice": 56870.0,
+            "PriceDifference": 7380.0,
+            "ArbitragePercent": 14.91
+        },
+        {
+            "Product": "Dell Inspiron 15",
+            "Category": "Laptop",
+            "MRP": 66070.0,
+            "LowestPrice": 54180.0,
+            "HighestPrice": 61000.0,
+            "PriceDifference": 6820.0,
+            "ArbitragePercent": 12.59
+        }
+    ],
+    "cheapest_store_leaderboard": [
+        {
+            "Website": "Reliance Digital",
+            "CheapestProductsCount": 20
+        }
+    ]
+}

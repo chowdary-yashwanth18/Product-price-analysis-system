@@ -1,0 +1,47 @@
+[
+    {
+        "Website": "Amazon",
+        "Best Price": 1200,
+        "Worst Price": 121100,
+        "Avg Price": 46344.15,
+        "Product Count": 400,
+        "Avg Discount": 13.76275,
+        "Avg Rating": 4.45
+    },
+    {
+        "Website": "Croma",
+        "Best Price": 1220,
+        "Worst Price": 122420,
+        "Avg Price": 47191.225,
+        "Product Count": 400,
+        "Avg Discount": 12.1825,
+        "Avg Rating": 4.45
+    },
+    {
+        "Website": "Flipkart",
+        "Best Price": 1190,
+        "Worst Price": 120820,
+        "Avg Price": 46175.3,
+        "Product Count": 400,
+        "Avg Discount": 14.072000000000001,
+        "Avg Rating": 4.45
+    },
+    {
+        "Website": "Reliance Digital",
+        "Best Price": 1180,
+        "Worst Price": 121780,
+        "Avg Price": 46556.275,
+        "Product Count": 400,
+        "Avg Discount": 13.363,
+        "Avg Rating": 4.45
+    },
+    {
+        "Website": "Vijay Sales",
+        "Best Price": 1220,
+        "Worst Price": 124080,
+        "Avg Price": 47198.075,
+        "Product Count": 400,
+        "Avg Discount": 12.165750000000001,
+        "Avg Rating": 4.45
+    }
+]

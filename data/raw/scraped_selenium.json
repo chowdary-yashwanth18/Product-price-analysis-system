@@ -1,0 +1,46 @@
+[
+    {
+        "Product Name":"Sony Bravia 55-inch 4K TV",
+        "Website":"Reliance Digital",
+        "Selling Price (\u20b9)":64990.0,
+        "MRP (\u20b9)":78390.0,
+        "Discount (%)":17.1,
+        "Rating":4.6,
+        "Review Count":1420,
+        "Scrape Date":"2026-09-16",
+        "Scraped Via":"Selenium Headless Automation"
+    },
+    {
+        "Product Name":"LG 55-inch OLED TV",
+        "Website":"Croma",
+        "Selling Price (\u20b9)":112990.0,
+        "MRP (\u20b9)":134390.0,
+        "Discount (%)":15.9,
+        "Rating":4.8,
+        "Review Count":890,
+        "Scrape Date":"2026-09-16",
+        "Scraped Via":"Selenium Headless Automation"
+    },
+    {
+        "Product Name":"OnePlus 12 (256GB) Flowy Emerald",
+        "Website":"Vijay Sales",
+        "Selling Price (\u20b9)":62999.0,
+        "MRP (\u20b9)":72800.0,
+        "Discount (%)":13.5,
+        "Rating":4.5,
+        "Review Count":2340,
+        "Scrape Date":"2026-09-16",
+        "Scraped Via":"Selenium Headless Automation"
+    },
+    {
+        "Product Name":"Dell Inspiron 15 (Core i5 16GB)",
+        "Website":"Flipkart",
+        "Selling Price (\u20b9)":55990.0,
+        "MRP (\u20b9)":66070.0,
+        "Discount (%)":15.3,
+        "Rating":4.4,
+        "Review Count":1670,
+        "Scrape Date":"2026-09-16",
+        "Scraped Via":"Selenium Headless Automation"
+    }
+]

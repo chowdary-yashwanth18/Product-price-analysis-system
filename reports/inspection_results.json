@@ -1,0 +1,38 @@
+{
+    "num_rows": 2000,
+    "num_cols": 9,
+    "columns": [
+        "Product Name",
+        "Category",
+        "Website",
+        "Scrape Date",
+        "MRP (\u20b9)",
+        "Selling Price (\u20b9)",
+        "Discount (%)",
+        "Rating",
+        "Review Count"
+    ],
+    "data_types": {
+        "Product Name": "str",
+        "Category": "str",
+        "Website": "str",
+        "Scrape Date": "str",
+        "MRP (\u20b9)": "int64",
+        "Selling Price (\u20b9)": "int64",
+        "Discount (%)": "float64",
+        "Rating": "float64",
+        "Review Count": "int64"
+    },
+    "missing_values": {
+        "Product Name": 0,
+        "Category": 0,
+        "Website": 0,
+        "Scrape Date": 0,
+        "MRP (\u20b9)": 0,
+        "Selling Price (\u20b9)": 0,
+        "Discount (%)": 0,
+        "Rating": 0,
+        "Review Count": 0
+    },
+    "duplicate_records": 0
+}

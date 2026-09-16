@@ -1,0 +1,10 @@
+101 Aditya 50
+102 Yash   70
+103 Ram    89
+104 Arjun  90
+105 Lokesh 78
+106 Raghu  88
+107 Pramod 90
+108 Manish 87
+109 Surya  91
+110 Lalith 76

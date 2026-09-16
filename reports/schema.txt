@@ -1,0 +1,22 @@
+HEAD:
+      Product Name    Category Website Scrape Date  MRP (₹)  Selling Price (₹)  Discount (%)  Rating  Review Count
+0  Apple iPhone 15  Smartphone  Amazon  2026-01-01    78400              68190          13.0     4.0           500
+1  Apple iPhone 15  Smartphone  Amazon  2026-01-08    78400              69580          11.2     4.1           547
+2  Apple iPhone 15  Smartphone  Amazon  2026-01-15    78400              67490          13.9     4.2           594
+3  Apple iPhone 15  Smartphone  Amazon  2026-01-22    78400              70970           9.5     4.3           641
+4  Apple iPhone 15  Smartphone  Amazon  2026-01-29    78400              68880          12.1     4.4           688
+
+Columns: ['Product Name', 'Category', 'Website', 'Scrape Date', 'MRP (₹)', 'Selling Price (₹)', 'Discount (%)', 'Rating', 'Review Count']
+
+Types: {'Product Name': 'str', 'Category': 'str', 'Website': 'str', 'Scrape Date': 'str', 'MRP (₹)': 'int64', 'Selling Price (₹)': 'int64', 'Discount (%)': 'float64', 'Rating': 'float64', 'Review Count': 'int64'}
+
+Summary:
+             MRP (₹)  Selling Price (₹)  Discount (%)     Rating  Review Count
+count    2000.000000        2000.000000   2000.000000  2000.0000   2000.000000
+mean    53767.000000       46693.005000     13.109200     4.4500   3152.000000
+std     33482.442234       29051.133544      2.269335     0.2873   1107.756319
+min      1450.000000        1180.000000      7.600000     4.0000    500.000000
+25%     25957.500000       21460.000000     11.600000     4.2000   2284.750000
+50%     63830.000000       54855.000000     13.000000     4.4500   3152.000000
+75%     75030.000000       65882.500000     14.700000     4.7000   4019.250000
+max    134390.000000      124080.000000     19.600000     4.9000   5804.000000

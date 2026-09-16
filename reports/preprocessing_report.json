@@ -1,0 +1,12 @@
+[
+    "Loaded original dataset with 2000 rows and 9 columns.",
+    "Handled missing values: No missing values found. No action needed.",
+    "Handled duplicate records: No duplicate records found. No action needed.",
+    "Handled inconsistent formats: Stripped leading/trailing whitespaces from all text columns.",
+    "Corrected data types: Converted 'Scrape Date' to standard YYYY-MM-DD date format.",
+    "Corrected data types: Ensured 'MRP', 'Selling Price', 'Discount', 'Rating', and 'Review Count' are strictly numeric.",
+    "Handled unnecessary columns: All 9 columns were reviewed and deemed necessary for the interactive dashboard. None were dropped.",
+    "Saved preprocessed dataset (Excel) to: c:/Users/chowd/OneDrive/Desktop/DAE/DAE_Product_Data_Preprocessed.xlsx",
+    "Saved preprocessed dataset (JSON) for web dashboard to: c:/Users/chowd/OneDrive/Desktop/DAE/data.json",
+    "Final shape of dataset: 2000 rows and 9 columns."
+]

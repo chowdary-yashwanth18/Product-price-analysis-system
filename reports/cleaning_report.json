@@ -1,0 +1,9 @@
+[
+    "Step 1 - Loaded dataset: 2000 rows, 9 columns.",
+    "Step 2a - Null values: None found. No action needed.",
+    "Step 2b - Duplicates: None found. No action needed.",
+    "Step 2c - Stripped whitespace from 4 text columns.",
+    "Step 2d - Converted 'Scrape Date' to YYYY-MM-DD.",
+    "Step 2d - Ensured numeric types for: ['MRP (\u20b9)', 'Selling Price (\u20b9)', 'Discount (%)', 'Rating', 'Review Count']",
+    "Cleaning complete. Final: 2000 rows, 10 columns."
+]
